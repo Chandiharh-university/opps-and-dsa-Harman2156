@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+
+// Function to calculate the sum of natural numbers
+int sumOfNaturalNumbers(int n) {
+    return (n * (n + 1)) / 2; // Using the formula: n(n+1)/2
+}
+
+int main() {
+    int n;
+
+    cout << "Enter a positive integer: ";
+    cin >> n;
+
+    if (n < 1) {
+        cout << "Please enter a positive integer." << endl;
+    } else {
+        int sum = sumOfNaturalNumbers(n);
+        cout << "The sum of the first " << n << " natural numbers is: " << sum << endl;
+    }
+
+    return 0;
+}
