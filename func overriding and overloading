@@ -1,0 +1,56 @@
+#include <iostream>
+using namespace std;
+
+// Base class
+class Base {
+public:
+    // Overridden method
+    virtual void display() {
+        cout << "Display from Base class" << endl;
+    }
+};
+
+// Derived class
+class Derived : public Base {
+public:
+    // Overriding method
+    void display() override {
+        cout << "Display from Derived class" << endl;
+    }
+};
+
+// Function overloading example
+class Calculator {
+public:
+    // Overloaded functions
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+};
+
+int main() {
+    // Demonstrating method overriding
+    Base* basePtr;
+    Derived derivedObj;
+    basePtr = &derivedObj;
+
+    cout << "Method Overriding Example:" << endl;
+    basePtr->display(); // Calls the overridden method in Derived class
+
+    // Demonstrating function overloading
+    Calculator calc;
+    cout << "\nFunction Overloading Example:" << endl;
+    cout << "Sum of 3 and 5 (int): " << calc.add(3, 5) << endl;
+    cout << "Sum of 2.5 and 4.3 (double): " << calc.add(2.5, 4.3) << endl;
+    cout << "Sum of 1, 2, and 3 (int): " << calc.add(1, 2, 3) << endl;
+
+    return 0;
+}
