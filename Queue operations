@@ -1,0 +1,58 @@
+#include <iostream>
+#include <queue>
+
+int main() {
+    std::queue<int> myQueue; // Create a queue of integers
+    int choice, value;
+
+    do {
+        std::cout << "\nQueue Operations Menu:\n";
+        std::cout << "1. Push (Insert into Queue)\n";
+        std::cout << "2. Pop (Remove from Queue)\n";
+        std::cout << "3. Display Queue\n";
+        std::cout << "4. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: // Push
+                std::cout << "Enter a value to push: ";
+                std::cin >> value;
+                myQueue.push(value);
+                std::cout << value << " has been added to the queue.\n";
+                break;
+
+            case 2: // Pop
+                if (!myQueue.empty()) {
+                    std::cout << myQueue.front() << " has been removed from the queue.\n";
+                    myQueue.pop();
+                } else {
+                    std::cout << "Queue is empty! Nothing to pop.\n";
+                }
+                break;
+
+            case 3: // Display Queue
+                if (!myQueue.empty()) {
+                    std::queue<int> tempQueue = myQueue; // Create a copy to display elements
+                    std::cout << "Queue elements: ";
+                    while (!tempQueue.empty()) {
+                        std::cout << tempQueue.front() << " ";
+                        tempQueue.pop();
+                    }
+                    std::cout << "\n";
+                } else {
+                    std::cout << "Queue is empty!\n";
+                }
+                break;
+
+            case 4: // Exit
+                std::cout << "Exiting program.\n";
+                break;
+
+            default:
+                std::cout << "Invalid choice! Please try again.\n";
+        }
+    } while (choice != 4);
+
+    return 0;
+}
