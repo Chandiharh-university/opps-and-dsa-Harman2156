@@ -1,0 +1,56 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+
+// Function to sort a queue
+std::queue<int> sortQueue(std::queue<int>& q) {
+    std::vector<int> tempVector;
+
+    // Transfer elements from queue to vector
+    while (!q.empty()) {
+        tempVector.push_back(q.front());
+        q.pop();
+    }
+
+    // Sort the vector
+    std::sort(tempVector.begin(), tempVector.end());
+
+    // Transfer elements back to the queue
+    for (int elem : tempVector) {
+        q.push(elem);
+    }
+
+    return q;
+}
+
+// Function to display the queue
+void displayQueue(std::queue<int> q) {
+    while (!q.empty()) {
+        std::cout << q.front() << " ";
+        q.pop();
+    }
+    std::cout << "\n";
+}
+
+int main() {
+    std::queue<int> myQueue;
+
+    // Insert elements into the queue
+    myQueue.push(34);
+    myQueue.push(12);
+    myQueue.push(56);
+    myQueue.push(9);
+    myQueue.push(27);
+
+    std::cout << "Original Queue: ";
+    displayQueue(myQueue);
+
+    // Sort the queue
+    myQueue = sortQueue(myQueue);
+
+    std::cout << "Sorted Queue: ";
+    displayQueue(myQueue);
+
+    return 0;
+}
