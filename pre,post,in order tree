@@ -1,0 +1,115 @@
+#include <iostream>
+using namespace std;
+
+// Node structure
+struct Node {
+    int data;
+    Node* left;  // Left child
+    Node* right; // Right child
+
+    Node(int val) {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+
+// Class for Binary Tree
+class BinaryTree {
+public:
+    Node* root;
+
+    BinaryTree() {
+        root = nullptr;
+    }
+
+    // Function to insert a new node in the tree
+    Node* insert(Node* node, int value) {
+        if (node == nullptr) {
+            return new Node(value);
+        }
+
+        if (value < node->data) {
+            node->left = insert(node->left, value);
+        } else if (value > node->data) {
+            node->right = insert(node->right, value);
+        }
+
+        return node;
+    }
+
+    // Wrapper function to insert a value into the tree
+    void add(int value) {
+        root = insert(root, value);
+    }
+
+    // In-order traversal (left, root, right)
+    void inorderTraversal(Node* node) {
+        if (node == nullptr) return;
+
+        inorderTraversal(node->left);
+        cout << node->data << " ";
+        inorderTraversal(node->right);
+    }
+
+    // Wrapper function for in-order traversal
+    void displayInOrder() {
+        inorderTraversal(root);
+        cout << endl;
+    }
+
+    // Pre-order traversal (root, left, right)
+    void preorderTraversal(Node* node) {
+        if (node == nullptr) return;
+
+        cout << node->data << " ";
+        preorderTraversal(node->left);
+        preorderTraversal(node->right);
+    }
+
+    // Wrapper function for pre-order traversal
+    void displayPreOrder() {
+        preorderTraversal(root);
+        cout << endl;
+    }
+
+    // Post-order traversal (left, right, root)
+    void postorderTraversal(Node* node) {
+        if (node == nullptr) return;
+
+        postorderTraversal(node->left);
+        postorderTraversal(node->right);
+        cout << node->data << " ";
+    }
+
+    // Wrapper function for post-order traversal
+    void displayPostOrder() {
+        postorderTraversal(root);
+        cout << endl;
+    }
+};
+
+int main() {
+    BinaryTree tree;
+
+    // Insert elements into the tree
+    tree.add(50);
+    tree.add(30);
+    tree.add(70);
+    tree.add(20);
+    tree.add(40);
+    tree.add(60);
+    tree.add(80);
+
+    // Display the tree using different traversals
+    cout << "In-order Traversal: ";
+    tree.displayInOrder();
+
+    cout << "Pre-order Traversal: ";
+    tree.displayPreOrder();
+
+    cout << "Post-order Traversal: ";
+    tree.displayPostOrder();
+
+    return 0;
+}
