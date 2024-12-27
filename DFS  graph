@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Function to perform DFS on a graph
+void dfsUtil(const vector<vector<int>>& graph, int vertex, vector<bool>& visited) {
+    visited[vertex] = true;
+    cout << vertex << " ";
+
+    for (int neighbor : graph[vertex]) {
+        if (!visited[neighbor]) {
+            dfsUtil(graph, neighbor, visited);
+        }
+    }
+}
+
+void dfs(const vector<vector<int>>& graph, int startVertex) {
+    int vertices = graph.size();
+    vector<bool> visited(vertices, false);
+
+    cout << "DFS Traversal starting from vertex " << startVertex << ": ";
+    dfsUtil(graph, startVertex, visited);
+    cout << endl;
+}
+
+int main() {
+    // Example graph represented as an adjacency list
+    vector<vector<int>> graph = {
+        {1, 2},       // Neighbors of vertex 0
+        {0, 3, 4},    // Neighbors of vertex 1
+        {0, 4},       // Neighbors of vertex 2
+        {1, 5},       // Neighbors of vertex 3
+        {1, 2, 5},    // Neighbors of vertex 4
+        {3, 4}        // Neighbors of vertex 5
+    };
+
+    int startVertex = 0;
+    dfs(graph, startVertex);
+
+    return 0;
+}
