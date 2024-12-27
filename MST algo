@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <algorithm>
+
+using namespace std;
+
+// Structure to represent an edge
+struct Edge {
+    int src, dest, weight;
+};
+
+// Structure to represent a graph
+struct Graph {
+    int vertices, edges;
+    vector<Edge> edgeList;
+};
+
+// Find function for union-find
+int findParent(vector<int>& parent, int vertex) {
+    if (parent[vertex] != vertex) {
+        parent[vertex] = findParent(parent, parent[vertex]); // Path compression
+    }
+    return parent[vertex];
+}
+
+// Union function for union-find
+void unionVertices(vector<int>& parent, vector<int>& rank, int x, int y) {
+    int rootX = findParent(parent, x);
+    int rootY = findParent(parent, y);
+
+    if (rank[rootX] < rank[rootY]) {
+        parent[rootX] = rootY;
+    } else if (rank[rootX] > rank[rootY]) {
+        parent[rootY] = rootX;
+    } else {
+        parent[rootY] = rootX;
+        rank[rootX]++;
+    }
+}
+
+// Function to implement Kruskal's algorithm for Minimum Spanning Tree
+void kruskalMST(Graph& graph) {
+    vector<Edge> result; // Store the resulting MST
+    int vertices = graph.vertices;
+
+    // Step 1: Sort edges in ascending order of their weight
+    sort(graph.edgeList.begin(), graph.edgeList.end(), [](Edge a, Edge b) {
+        return a.weight < b.weight;
+    });
+
+    // Union-Find initialization
+    vector<int> parent(vertices);
+    vector<int> rank(vertices, 0);
+
+    for (int i = 0; i < vertices; i++) {
+        parent[i] = i;
+    }
+
+    // Step 2: Pick edges one by one and add to result if they don't form a cycle
+    for (Edge& edge : graph.edgeList) {
+        int rootSrc = findParent(parent, edge.src);
+        int rootDest = findParent(parent, edge.dest);
+
+        if (rootSrc != rootDest) {
+            result.push_back(edge);
+            unionVertices(parent, rank, rootSrc, rootDest);
+        }
+    }
+
+    // Print the resulting MST
+    cout << "Edge \tWeight\n";
+    for (Edge& edge : result) {
+        cout << edge.src << " - " << edge.dest << " \t" << edge.weight << "\n";
+    }
+}
+
+int main() {
+    Graph graph;
+    graph.vertices = 5;
+    graph.edges = 7;
+
+    graph.edgeList = {
+        {0, 1, 2}, {0, 3, 6}, {1, 2, 3}, {1, 3, 8}, {1, 4, 5}, {2, 4, 7}, {3, 4, 9}
+    };
+
+    cout << "Minimum Spanning Tree using Kruskal's Algorithm:\n";
+    kruskalMST(graph);
+
+    return 0;
+}
