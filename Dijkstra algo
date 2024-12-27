@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+// Function to find the vertex with the minimum distance value
+int findMinDistance(vector<int>& dist, vector<bool>& visited, int vertices) {
+    int minDistance = INT_MAX, minIndex;
+
+    for (int v = 0; v < vertices; v++) {
+        if (!visited[v] && dist[v] < minDistance) {
+            minDistance = dist[v];
+            minIndex = v;
+        }
+    }
+
+    return minIndex;
+}
+
+// Function to implement Dijkstra's algorithm
+void dijkstra(vector<vector<int>>& graph, int src, int vertices) {
+    vector<int> dist(vertices, INT_MAX); // Holds the shortest distances from src to all vertices
+    vector<bool> visited(vertices, false); // Marks visited vertices
+
+    dist[src] = 0; // Distance from src to itself is always 0
+
+    for (int count = 0; count < vertices - 1; count++) {
+        int u = findMinDistance(dist, visited, vertices);
+
+        visited[u] = true;
+
+        for (int v = 0; v < vertices; v++) {
+            if (!visited[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+            }
+        }
+    }
+
+    // Print the shortest distances
+    cout << "Vertex \tDistance from Source\n";
+    for (int i = 0; i < vertices; i++) {
+        cout << i << " \t" << dist[i] << "\n";
+    }
+}
+
+int main() {
+    int vertices = 5;
+    vector<vector<int>> graph = {
+        {0, 10, 0, 0, 5},
+        {0, 0, 1, 0, 2},
+        {0, 0, 0, 4, 0},
+        {7, 0, 6, 0, 0},
+        {0, 3, 9, 2, 0}};
+
+    cout << "Shortest distances from source vertex 0 using Dijkstra's Algorithm:\n";
+    dijkstra(graph, 0, vertices);
+
+    return 0;
+}
