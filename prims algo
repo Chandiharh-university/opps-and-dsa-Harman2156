@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+// Function to find the vertex with the minimum key value
+int findMinKey(vector<int>& key, vector<bool>& mstSet, int vertices) {
+    int minKey = INT_MAX, minIndex;
+
+    for (int v = 0; v < vertices; v++) {
+        if (!mstSet[v] && key[v] < minKey) {
+            minKey = key[v];
+            minIndex = v;
+        }
+    }
+
+    return minIndex;
+}
+
+// Function to print the Minimum Spanning Tree (MST)
+void printMST(vector<int>& parent, vector<vector<int>>& graph, int vertices) {
+    cout << "Edge \tWeight\n";
+    for (int i = 1; i < vertices; i++) {
+        cout << parent[i] << " - " << i << " \t" << graph[i][parent[i]] << "\n";
+    }
+}
+
+// Function to implement Prim's algorithm
+void primMST(vector<vector<int>>& graph, int vertices) {
+    vector<int> parent(vertices); // Stores the constructed MST
+    vector<int> key(vertices, INT_MAX); // Key values used to pick minimum weight edge
+    vector<bool> mstSet(vertices, false); // To represent vertices included in MST
+
+    // Start with the first vertex
+    key[0] = 0;
+    parent[0] = -1; // First node is always the root of the MST
+
+    for (int count = 0; count < vertices - 1; count++) {
+        // Pick the minimum key vertex not yet included in MST
+        int u = findMinKey(key, mstSet, vertices);
+
+        mstSet[u] = true;
+
+        // Update key value and parent index of adjacent vertices
+        for (int v = 0; v < vertices; v++) {
+            if (graph[u][v] && !mstSet[v] && graph[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = graph[u][v];
+            }
+        }
+    }
+
+    // Print the constructed MST
+    printMST(parent, graph, vertices);
+}
+
+int main() {
+    int vertices = 5;
+    vector<vector<int>> graph = {
+        {0, 2, 0, 6, 0},
+        {2, 0, 3, 8, 5},
+        {0, 3, 0, 0, 7},
+        {6, 8, 0, 0, 9},
+        {0, 5, 7, 9, 0}};
+
+    cout << "Minimum Spanning Tree using Prim's Algorithm:\n";
+    primMST(graph, vertices);
+
+    return 0;
+}
