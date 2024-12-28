@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+
+// Helper function for backtracking
+void backtrack(int start, int n, int k, std::vector<int>& current, std::vector<std::vector<int>>& result) {
+    // Base case: if the combination is complete
+    if (current.size() == k) {
+        result.push_back(current);
+        return;
+    }
+
+    // Iterate through possible numbers
+    for (int i = start; i <= n; ++i) {
+        // Include the current number
+        current.push_back(i);
+
+        // Recur to the next number
+        backtrack(i + 1, n, k, current, result);
+
+        // Backtrack: remove the last number
+        current.pop_back();
+    }
+}
+
+// Main function to generate combinations
+std::vector<std::vector<int>> combine(int n, int k) {
+    std::vector<std::vector<int>> result;
+    std::vector<int> current;
+    backtrack(1, n, k, current, result);
+    return result;
+}
+
+// Utility function to print combinations
+void printCombinations(const std::vector<std::vector<int>>& combinations) {
+    for (const auto& combo : combinations) {
+        std::cout << "[";
+        for (size_t i = 0; i < combo.size(); ++i) {
+            std::cout << combo[i];
+            if (i < combo.size() - 1) std::cout << ",";
+        }
+        std::cout << "] ";
+    }
+    std::cout << std::endl;
+}
+
+// Example usage
+int main() {
+    int n, k;
+
+    std::cout << "Enter n: ";
+    std::cin >> n;
+
+    std::cout << "Enter k: ";
+    std::cin >> k;
+
+    std::vector<std::vector<int>> combinations = combine(n, k);
+
+    std::cout << "Combinations:" << std::endl;
+    printCombinations(combinations);
+
+    return 0;
+}
