@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <numeric> // for accumulate
+
+std::vector<int> generateNumbersWithSum(int n, int sum) {
+    std::vector<int> numbers(n, 0);
+
+    if (n == 0 || sum < 0) {
+        std::cerr << "Invalid input: n should be > 0 and sum should be >= 0." << std::endl;
+        return {};
+    }
+
+    // Distribute the sum evenly
+    int baseValue = sum / n;
+    int remainder = sum % n;
+
+    // Fill the array with the base value
+    for (int i = 0; i < n; ++i) {
+        numbers[i] = baseValue;
+    }
+
+    // Distribute the remainder
+    for (int i = 0; i < remainder; ++i) {
+        numbers[i]++;
+    }
+
+    return numbers;
+}
+
+int main() {
+    int n, sum;
+
+    std::cout << "Enter the number of elements (n): ";
+    std::cin >> n;
+
+    std::cout << "Enter the desired sum: ";
+    std::cin >> sum;
+
+    std::vector<int> result = generateNumbersWithSum(n, sum);
+
+    if (!result.empty()) {
+        std::cout << "Generated numbers: ";
+        for (int num : result) {
+            std::cout << num << " ";
+        }
+        std::cout << std::endl;
+
+        // Validate the result
+        std::cout << "Sum of generated numbers: " 
+                  << std::accumulate(result.begin(), result.end(), 0) 
+                  << std::endl;
+    }
+
+    return 0;
+}
+
