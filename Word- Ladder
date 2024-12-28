@@ -1,0 +1,145 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <queue>
+
+class Solution {
+public:
+    std::vector<std::vector<std::string>> findLadders(std::string beginWord, std::string endWord, std::vector<std::string>& wordList) {
+        std::unordered_set<std::string> wordSet(wordList.begin(), wordList.end());
+        std::vector<std::vector<std::string>> result;
+
+        if (!wordSet.count(endWord)) {
+            return result; // If endWord is not in the word list
+        }
+
+        std::unordered_map<std::string, std::vector<std::string>> graph;
+        std::unordered_map<std::string, int> levels;
+
+        // BFS to construct the graph and record the levels of words
+        if (!bfs(beginWord, endWord, wordSet, graph, levels)) {
+            return result; // No transformation sequence exists
+        }
+
+        std::vector<std::string> path = {beginWord};
+        backtrack(beginWord, endWord, graph, path, result);
+
+        return result;
+    }
+
+private:
+    bool bfs(const std::string& beginWord, const std::string& endWord, 
+             std::unordered_set<std::string>& wordSet,
+             std::unordered_map<std::string, std::vector<std::string>>& graph,
+             std::unordered_map<std::string, int>& levels) {
+        std::queue<std::string> queue;
+        queue.push(beginWord);
+        levels[beginWord] = 0;
+
+        int level = 0;
+        bool foundEnd = false;
+
+        while (!queue.empty()) {
+            int size = queue.size();
+            ++level;
+
+            for (int i = 0; i < size; ++i) {
+                std::string current = queue.front();
+                queue.pop();
+
+                std::vector<std::string> neighbors = getNeighbors(current, wordSet);
+
+                for (const std::string& neighbor : neighbors) {
+                    if (!levels.count(neighbor)) {
+                        levels[neighbor] = level;
+                        queue.push(neighbor);
+                    }
+
+                    // Build the graph (only add edges for the shortest path)
+                    if (levels[neighbor] == level) {
+                        graph[current].push_back(neighbor);
+                    }
+
+                    if (neighbor == endWord) {
+                        foundEnd = true;
+                    }
+                }
+            }
+
+            if (foundEnd) break; // Stop BFS if the endWord is reached
+        }
+
+        return foundEnd;
+    }
+
+    std::vector<std::string> getNeighbors(const std::string& word, const std::unordered_set<std::string>& wordSet) {
+        std::vector<std::string> neighbors;
+        std::string temp = word;
+
+        for (size_t i = 0; i < word.size(); ++i) {
+            char originalChar = temp[i];
+            for (char c = 'a'; c <= 'z'; ++c) {
+                if (c == originalChar) continue;
+                temp[i] = c;
+                if (wordSet.count(temp)) {
+                    neighbors.push_back(temp);
+                }
+            }
+            temp[i] = originalChar; // Restore original character
+        }
+
+        return neighbors;
+    }
+
+    void backtrack(const std::string& current, const std::string& endWord, 
+                   std::unordered_map<std::string, std::vector<std::string>>& graph,
+                   std::vector<std::string>& path, 
+                   std::vector<std::vector<std::string>>& result) {
+        if (current == endWord) {
+            result.push_back(path);
+            return;
+        }
+
+        for (const std::string& neighbor : graph[current]) {
+            path.push_back(neighbor);
+            backtrack(neighbor, endWord, graph, path, result);
+            path.pop_back(); // Backtrack
+        }
+    }
+};
+
+int main() {
+    std::string beginWord, endWord;
+    int n;
+
+    std::cout << "Enter the beginWord: ";
+    std::cin >> beginWord;
+
+    std::cout << "Enter the endWord: ";
+    std::cin >> endWord;
+
+    std::cout << "Enter the number of words in wordList: ";
+    std::cin >> n;
+
+    std::vector<std::string> wordList(n);
+    std::cout << "Enter the words in wordList:" << std::endl;
+    for (int i = 0; i < n; ++i) {
+        std::cin >> wordList[i];
+    }
+
+    Solution solution;
+    std::vector<std::vector<std::string>> result = solution.findLadders(beginWord, endWord, wordList);
+
+    std::cout << "All shortest transformation sequences:" << std::endl;
+    for (const auto& seq : result) {
+        for (size_t i = 0; i < seq.size(); ++i) {
+            std::cout << seq[i];
+            if (i < seq.size() - 1) std::cout << " -> ";
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
